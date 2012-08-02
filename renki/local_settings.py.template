@@ -1,0 +1,18 @@
+# database for django
+
+DATABASES = {
+  'default': {
+        'NAME': 'database',                      # Or path to database file if using sqlite3.
+        'USER': 'username',                      # Not used with sqlite3.
+        'PASSWORD': 'password',                  # Not used with sqlite3.
+        'HOST': 'server',                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '5432',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    }
+}
+
+services database
+
+SERVICES_DATABASE_SERVER = 'services.server.address'
+SERVICES_DATABASE_SERVER_PORT = None
+SERVICES_DATABASE = 'services'

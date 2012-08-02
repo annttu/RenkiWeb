@@ -72,6 +72,7 @@ STATIC_URL = '/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
+    'static/',
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
@@ -104,7 +105,7 @@ MIDDLEWARE_CLASSES = (
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # For sqlalchemy per user sessions
-    #'SQLAlchemySessionMiddleware',
+    'renki.ServicesMiddleware.ServicesMiddleware',
 )
 
 ROOT_URLCONF = 'renki.urls'
@@ -161,8 +162,19 @@ LOGGING = {
 
 # authenticate only against Services database
 AUTHENTICATION_BACKENDS = (
+    #'django.contrib.auth.backends.ModelBackend',
     'renki.auth.ServicesAuthenticationBackend',
 )
+
+LOGIN_URL = '/login'
+
+CACHES = {'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+    },
+    'inprocess': {'BACKEND': 'renki.inmemorycache.LocMemNoPickleCache',
+    'KEY_PREFIX': 'renki-',
+    'TIMEOUT': 3600}
+    }
 
 from renki.local_settings import *
 

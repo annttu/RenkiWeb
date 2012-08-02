@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load future %}
+{% block content %}
+<section>
+	<div class="page-header">
+		<h2>{% trans "homepage" %}
+	</div>
+</section>
+<section>
+	<div class="row">
+		<div class="span4">
+			<h3>{% trans "Services" %}</h3>
+			<ul class="unstyled">
+				<li><a href="{% url "domains" %}">{% trans "Domains" %}</a></li>
+				<li><a href="{% url "databases" %}">{% trans "Databases" %}</a></li>
+			</ul>
+		</div>
+	</div>
+{% endblock %}

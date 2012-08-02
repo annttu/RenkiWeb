@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load future %}
+{% block content %}
+<section>
+<div class="page-header">
+		<h2>{% trans "Domains" %}</h2>
+</div>
+</section>
+{% for domain in domains %}
+<section>
+   <div class="row well">
+	<div class="span12">
+		<h3><a href="{% url "domains_edit" domain.t_domains_id %}">{{domain.name}}</a></h3>
+   </div>
+	<div class="span4">
+		<h4>{% trans "Vhosts" %}</h4>
+		<ul class="unstyled">
+			{% for vhost in domain.vhosts %}
+			<li><a href="{% url "vhosts_edit" vhost.t_vhosts_id %}">{{vhost.name}}</a>
+				{% for alias in vhost.aliases %}
+				 {% if alias %}
+				 <span>{{alias}}</span>
+				 {% endif %}
+				{% endfor %}
+				{% for redirect in vhost.redirects %}
+				 {% if redirect %}
+				 <span>{{redirect}}</span>
+				 {% endif %}
+				{% endfor %}
+				<li>
+			{% empty %}
+				<li><p>{% trans "No vhosts" %}</p></li>
+			{% endfor %}
+		</ul>
+	  </div>
+	  <div class="span4">
+		<h4>{% trans "Mailboxes" %}</h4>
+		<ul class="unstyled">
+		{% for mailbox in domain.mailboxes %}
+			<li><span>{{mailbox.name}}</span></li>
+		{% endfor %}
+		</ul>
+	</div>
+</section>
+{% empty %}
+<section>
+	<div class="row well">
+		<div class="span12">
+			<p>{% trans "No domains found" %}</p>
+		</div>
+	</div>
+</section>
+</div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,5 @@
+
+Renki uses Services <http://github.com/kapsiry/services> library to access database.
+Renki caches service connection objects on process memory.
+ - On development state, django reloads python files when something is modifed
+   and cleans cache on that.

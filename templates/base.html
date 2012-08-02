@@ -1,0 +1,39 @@
+<!DOCTYPE HTML>
+{% load i18n %}
+<html>
+<head>
+	<title>Renki - {% trans "Service management" %}</title>
+	<link href="http://current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css" rel="stylesheet">
+	<link href="{{ STATIC_URL }}style/renki.css" rel="stylesheet">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+<!--<section>
+	<div class"row">
+		<div class="span12">
+			<div class="page-header">
+				<h1>Renki - {% trans "Service management" %}</h1>
+			</div>
+		</div>
+	</div>
+</section> -->
+{% if messages %}
+<section>
+	<div class="alert alert-success span6 center">
+		<button class="close" data-dismiss="alert" id="mainsuccess">×</button>
+	{% for message in messages %}
+		<p>{{message}}</p>
+	{% endfor %}
+	</div>
+</section>
+{% endif %}
+<div class="container">
+{% block content %}
+{% endblock %}
+</div>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="http://current.bootstrapcdn.com/bootstrap-v204/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}js/renki.js"></script>
+</body>
+</html>

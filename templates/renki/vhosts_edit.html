@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load future %}
+{% block content %}
+<section>
+<div class="page-header">
+	<div class="span12">
+		<a href="{% url "domains" %}" alt="{% trans "back to domains list" %}">{% trans "back to domains list" %}</a>
+		<h2>{% trans "Vhost" %} {{vhost.name}}</h2>
+		<p></p>
+	</div>
+</div>
+<div class="row">
+	<div class="span6">
+		<form class="form-horizontal">
+			<fieldset>
+		    <div class="control-group">
+				<label for='name' class="control-label">{% trans "name"|capfirst %}</label>
+				<div class="controls">
+					<input type="text" name='name' value="{{vhost.name}}">
+				</div>
+			</div>
+		        <div class="control-group">
+				<label for='aliases' class="control-label">{% trans "aliases"|capfirst %}</label>
+				<div class="controls">
+					<input type="text" name='aliases' value="{% for alias in vhost.aliases %}{% if aliase %}{{alias}}{% if forloop.revcount > 0 %}, {% endif %}{% endif %}{% endfor %}">
+				</div>
+			</div>
+		        <div class="control-group">
+				<label for='redirects' class="control-label">{% trans "redirects"|capfirst %}</label>
+				<div class="controls">
+					<input type="text" name='redirects' value="{% for redirect in vhost.redirects %}{% if redirect%}{{redirect}}{% if forloop.revcount > 0 %}, {% endif %}{% endif %}{% endfor %}">
+				</div>
+			</div>
+		    <div class="control-group">
+				<label for='redirect_to' class="control-label">{% trans "redirect_to"|capfirst %}</label>
+				<div class="controls">
+					<input type="text" name='redirect_to' value="{%if vhost.redirect_to %}{{vhost.redirect_to}}{% endif %}">
+				</div>
+			</div>
+			<div class="control-group">
+				<label for='logacecss' class="control-label">{% trans "logacecss"|capfirst %}</label>
+				<div class="controls">
+					<input type="checkbox" name='logacecss'{% if vhost.logaccess = True %} checked="checked"{% endif %} disabled="disabled">
+				</div>
+			</div>
+		    <div class="control-group">
+				<label for='locked' class="control-label">{% trans "locked"|capfirst %}</label>
+				<div class="controls">
+					<input type="checkbox" name='locked'{% if vhost.locked %} checked="checked"{% endif %} disabled="disabled">
+				</div>
+			</div>
+		        <div class="control-group">
+				<label for='document_root' class="control-label">{% trans "document_root"|capfirst %}</label>
+				<div class="controls">
+					<input type="text" name='document_root' value="{{vhost.document_root}}" disabled="disabled">
+				</div>
+			</div>
+				<input type="submit" value="{% trans "save"|capfirst %}">
+			</fieldset>
+		</form>
+		</div>
+	</div>
+</div>
+</section>
+{% endblock %}

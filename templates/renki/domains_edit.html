@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load future %}
+{% block content %}
+<section>
+<div class="row">
+	<div class="span12">
+<a href="{% url "domains" %}" alt="{% trans "back to domains list" %}">{% trans "back to domains list" %}</a>
+<h2>{% trans "Domain" %} {{domain.name}}</h2>
+<p></p>
+<div class="span6">
+	<form class="form-horizontal" action="{% url "domains_edit" domain.t_domains_id %}" method="POST">
+		<fieldset>
+			{% csrf_token %}
+			<div class="control-group">
+				<p>{{ form.non_field_errors }}<p>
+			</div>
+        <div class="control-group">
+			<label for='name' class="control-label">{% trans "dns"|capfirst %}</label>
+			<p class="error">{{ form.dns.errors }}</p>
+			<div class="controls">
+				{{form.dns}}
+			</div>
+		</div>
+		<div class="control-group">
+			<label for='name' class="control-label">{% trans "shared"|capfirst %}</label>
+			<p class="error">{{ form.shared.errors }}</p>
+			<div class="controls">
+				{{form.shared}}
+			</div>
+		</div>
+		<div class="control-group">
+			<label for='name' class="control-label">{% trans "refresh_time"|capfirst %}</label>
+			<p class="error">{{ form.refresh_time.errors }}</p>
+			<div class="controls">
+				{{form.refresh_time}}
+			</div>
+		</div>
+		<div class="control-group">
+			<label for='name' class="control-label">{% trans "retry_time"|capfirst %}</label>
+			<p class="error">{{ form.retry_time.errors }}</p>
+			<div class="controls">
+				{{form.retry_time}}
+			</div>
+		</div>
+		<div class="control-group">
+			<label for='name' class="control-label">{% trans "expire_time"|capfirst %}</label>
+			<p class="error">{{ form.expire_time.errors }}</p>
+			<div class="controls">
+				{{form.expire_time}}
+			</div>
+		</div>
+		<div class="control-group">
+			<label for='name' class="control-label">{% trans "minimum_cache_time"|capfirst %}</label>
+			<p class="error">{{ form.minimum_cache_time.errors }}</p>
+			<div class="controls">
+				{{form.minimum_cache_time}}
+			</div>
+		</div>
+		<div class="control-group">
+			<label for='name' class="control-label">{% trans "ttl"|capfirst %}</label>
+			<p class="error">{{ form.ttl.errors }}</p>
+			<div class="controls">
+				{{form.ttl}}
+			</div>
+		</div>
+		<div class="control-group">
+		<label for='domain_type' class="control-label">{% trans "domain_type"|capfirst %}</label>
+		<div class="controls">
+			<p class="error">{{ form.domain_type.errors }}</p>
+			<select name="domain_type">
+				<option {% if domain.domain_type = 'MASTER' %}selected="selected"{% endif %}>MASTER</option>
+				<option {% if domain.domain_type = 'SLAVE' %}selected="selected"{% endif %}>SLAVE</option>
+				<option {% if domain.domain_type = 'NONE' %}selected="selected"{% endif %}>None</option>
+			</select>
+		</div>
+		</div>
+        <div class="control-group">
+			<label for='masters' class="control-label">{% trans "masters"|capfirst %}</label>
+			<p class="error">{{ form.masters.errors }}</p>
+			<div class="controls">
+				{{form.masters}}
+			</div>
+		</div>
+        <div class="control-group">
+			<label for='allow_transfer' class="control-label">{% trans "allow_transfer"|capfirst %}</label>
+			<p class="error">{{ form.allow_transfer.errors }}</p>
+			<div class="controls">
+				{{form.allow_transfer}}
+			</div>
+		</div>
+		<input type="submit" value="{% trans "save"|capfirst %}">
+	</fieldset>
+	</form>
+	<!-- 
+<form class="form-horizontal">
+	<fieldset>
+        <div class="control-group">
+		<label for='name' class="control-label">{% trans "name"|capfirst %}</label>
+		<div class="controls">
+			<input type="text" name='name' value="{{domain.name}}">
+		</div>
+	</div>
+        <div class="control-group">
+		<label for='shared' class="control-label">{% trans "shared"|capfirst %}</label>
+		<div class="controls">
+			<input type="text" name='shared' value="{{domain.shared}}">
+		</div>
+	</div>
+        <div class="control-group">
+		<label for='dns' class="control-label">{% trans "dns"|capfirst %}</label>
+		<div class="controls">
+			<input type="checkbox" name='dns' {% if domain.dns %}checked="checked"{% endif %}>
+		</div>
+	</div>
+        <div class="control-group">
+		<label for='refresh_time' class="control-label">{% trans "refresh time"|capfirst %}</label>
+		<div class="controls">
+			<input type="text" name='refresh_time' value="{{domain.refresh_time}}">
+		</div>
+	</div>
+        <div class="control-group">
+		<label for='retry_time' class="control-label">{% trans "retry_time"|capfirst %}</label>
+		<div class="controls">
+			<input type="text" name='retry_time' value="{{domain.retry_time}}">
+		</div>
+	</div>
+        <div class="control-group">
+		<label for='expire_time' class="control-label">{% trans "expire_time"|capfirst %}</label>
+		<div class="controls">
+			<input type="text" name='expire_time' value="{{domain.expire_time}}">
+		</div>
+	</div>
+        <div class="control-group">
+		<label for='minimium_cache_time' class="control-label">{% trans "minimum_cache_time"|capfirst %}</label>
+		<div class="controls">
+			<input type="text" name='minimium_cache_time' value="{{domain.minimum_cache_time}}">
+		</div>
+	</div>
+        <div class="control-group">
+		<label for='ttl' class="control-label">{% trans "ttl" %}</label>
+		<div class="controls">
+			<input type="text" name='ttl' value="{{domain.ttl}}">
+		</div>
+	</div>
+        <div class="control-group">
+		<label for='domain_type' class="control-label">{% trans "domain_type"|capfirst %}</label>
+		<div class="controls">
+			<select>
+				<option {% if domain.domain_type = 'MASTER' %}selected="selected"{% endif %}>MASTER</option>
+				<option {% if domain.domain_type = 'SLAVE' %}selected="selected"{% endif %}>SLAVE</option>
+				<option {% if domain.domain_type = 'NONE' %}selected="selected"{% endif %}>None</option>
+			</select>
+		</div>
+	</div>
+        <div class="control-group">
+		<label for='masters' class="control-label">{% trans "masters"|capfirst %}</label>
+		<div class="controls">
+			<input type="text" name='masters' value="{% if domain.masters %}{{domain.masters}}{% endif %}"  placeholder='{% trans "IP-address" %}'>
+		</div>
+	</div>
+        <div class="control-group">
+		<label for='allow_transfer' class="control-label">{% trans "allow_transfer"|capfirst %}</label>
+		<div class="controls">
+			<input type="text" name='allow_transfer' value="{% if domain.allow_transfer %}{{domain.allow_transfer}}{% endif %}" placeholder='{% trans "IP-address" %}'>
+		</div>
+	</div>
+	<input type="submit" value="{% trans "save"|capfirst %}">
+	</fieldset>
+</form>
+-->
+</div>
+</div>
+{% endblock %}

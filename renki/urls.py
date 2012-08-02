@@ -5,10 +5,16 @@ from django.conf.urls import patterns, include, url
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'renki.views.home', name='home'),
-    # url(r'^renki/', include('renki.foo.urls')),
-
+    url(r'^$', 'renki.views.index', name='index'),
+    url(r'^login/?$', 'renki.views.my_login', name='login'),
+    url(r'^logout/?$', 'renki.views.my_logout', name='logout'),
+    url(r'^success/?$', 'renki.views.success', name='success'),
+    url(r'^domains/?$', 'renki.views.domains', name='domains'),
+    url(r'^domains/(\d+)$', 'renki.views.domains_edit', name='domains_edit'),
+    url(r'^vhosts/(\d+)$', 'renki.views.vhosts_edit', name='vhosts_edit'),
+    url(r'^databases/(\d+)$', 'renki.views.databases_passwd', name='databases_passwd'),
+    url(r'^databases/?$', 'renki.views.databases', name='databases'),
+    
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load future %}
+{% block content %}
+<section>
+<div class="page-header">
+		<h2>{% trans "Databases" %}</h2>
+</div>
+</section>
+<section>
+	<div class="row">
+		<div class="span12">
+			<p><a href="{% url "databases" %}">{% trans "Back" %}</a></p>
+		</div>
+	</div>
+</section>
+<section>
+	<div class="row">
+		<div class="span4">
+		<h3>{{db.database_name}}</h3>
+		<p>{% trans "username"|capfirst %}: {{db.username}}</p>
+		<p>{% trans "server"|capfirst %}: {{db.server}}</p>
+		<form method="POST" action="{% url "databases_passwd" db.t_databases_id %}">
+			{% csrf_token %}
+			<input type="submit" name="submit" value="{% trans "Confirm password change" %}">
+		</form>
+		<p></p>
+    	</div>
+	</div>
+</section>
+{% endblock %}

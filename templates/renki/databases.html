@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load future %}
+{% block content %}
+<section>
+<div class="page-header">
+		<h2>{% trans "Databases" %}</h2>
+</div>
+</section>
+{% if mysql %}
+<section>
+	<div class="page-header">
+		<h2>{% trans "MySQL databases" %}</h2>
+	</div>
+   <div class="row">
+	{% for db in mysql %}
+	<div class="span4">
+		<h3>{{db.database_name}}</h3>
+		<p>{% trans "username"|capfirst %}: {{db.username}}</p>
+		<p>{% trans "server"|capfirst %}: {{db.server}}</p>
+		<p><a href="{% url "databases_passwd" db.t_databases_id %}">{% trans "change password" %}</a></p>
+    </div>
+	{% endfor %}
+	</div>
+</section>
+{% endif %}
+{% if mysql %}
+<section>
+	<div class="page-header">
+		<h2>{% trans "PostgreSQL databases" %}</h2>
+	</div>
+   <div class="row">
+	{% for db in postgresql %}
+	<div class="span4">
+		<h3>{{db.database_name}}</a></h3>
+		<p>{% trans "username"|capfirst %}: {{db.username}}</p>
+		<p>{% trans "server"|capfirst %}: {{db.server}}</p>
+		<p><a href="{% url "databases_passwd" db.t_databases_id %}">{% trans "change password" %}</p>
+    </div>
+	{% endfor %}
+   </div>
+</section>
+{% endif %}
+{% endblock %}

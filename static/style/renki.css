@@ -1,0 +1,12 @@
+.login {
+    margin: auto;
+    max-width: 360px;
+}
+
+.center {
+    margin: auto;
+}
+
+.errorlist li {
+    color: #ff0000;
+}
