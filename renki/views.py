@@ -9,8 +9,9 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.utils.translation import ugettext_lazy as _
 from django.core.cache import get_cache
+from django.contrib import messages
 
-from renki.forms import DomainForm
+from renki.forms import DomainForm, PortForm
 
 from services.services import Services
 from services.exceptions import DoesNotExist
@@ -167,6 +168,48 @@ def vhosts_edit(request, vhost_id, **kwargs):
         pass
     return render_to_response('renki/vhosts_edit.html',{'vhost':vhost},
         context_instance=RequestContext(request))
+
+def ports(request, **kwargs):
+    class Port:
+        def __init__(self, name):
+            self.ports = []
+            self.name = name
+
+    try:
+        srv = get_srv(request)
+        all_servers = srv.user_ports.list_servers()
+    except Exception as e:
+        logging.exception(e)
+        raise Http404
+
+    all_servers = [(server.server, server.server) for server in all_servers]
+
+    if request.method == 'POST':
+        form = PortForm(request.POST)
+        form.fields['server'].choices = all_servers
+        if form.is_valid():
+            try:
+                srv.user_ports.add(form.cleaned_data['server'],form.cleaned_data['info'])
+                messages.info(request,_('Successfully added port'))
+                form = PortForm()
+                form.fields['server'].choices = all_servers
+            except Exception as e:
+                logging.exception(e)
+                messages.error(request, _('Cannot add port'))
+        else:
+            messages.error(request, _('Form contains errors'))
+    else:
+        form = PortForm()
+        form.fields['server'].choices = all_servers
+    ports = srv.user_ports.list()
+    servers = {}
+    for port in ports:
+        if port.server not in servers:
+            servers[port.server] = Port(port.server)
+        servers[port.server].ports.append(port)
+    servers = [servers[server] for server in servers]
+    return render_to_response('renki/ports.html', {'servers': servers, 'form': form},
+                              context_instance=RequestContext(request))
 
 
 @login_required

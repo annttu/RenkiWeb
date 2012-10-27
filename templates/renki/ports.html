@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load future %}
+{% block content %}
+<section>
+<div class="page-header">
+		<h2>{% trans "Ports" %}</h2>
+</div>
+</section>
+{% if messages %}
+<section>
+   <div class="row well">
+	<div class="span12">
+		<ul class="messages">
+		    {% for message in messages %}
+		    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		    {% endfor %}
+		</ul>
+	</div>
+</div>
+</section>
+{% endif %}
+{% for server in servers %}
+<section>
+   <div class="row well">
+	<div class="span12">
+		<h3>{{ server.name|capfirst }}</h3>
+   </div>
+	<div class="span4">
+		<table class="table">
+			<thead>
+			<tr><th>{% trans "Port" %}</th><th>{% trans "Info" %}</th></tr>
+			</thead>
+			<tbody>
+			{% for port in server.ports %}
+				<tr><td>{{ port.port }} </td><td> {{port.info}}</td></tr>
+			{% endfor %}
+			</tbody>
+		</table>
+	  </div>
+</section>
+{% empty %}
+<section>
+	<div class="row well">
+		<div class="span12">
+			<p>{% trans "No ports found" %}</p>
+		</div>
+	</div>
+</section>
+{% endfor %}
+<section>
+	<div class="row">
+		<div class="span12">
+			<h3>{% trans "Add port" %}</h3>
+			<form method='POST'>
+				{% csrf_token %}
+				<fieldset>
+				<div class="control-group">
+					<label for='server' class="control-label">{% trans "Server"|capfirst %}</label>
+					<p class="error">{{ form.server.errors }}</p>
+					<div class="controls">
+						{{form.server}}
+					</div>
+				</div>
+				<div class="control-group">
+					<label for='server' class="control-label">{% trans "Info"|capfirst %}</label>
+					<p class="error">{{ form.info.errors }}</p>
+					<div class="controls">
+						{{form.info}}
+					</div>
+				</div>
+				</fieldset>
+				<input type="submit" value="{% trans "save"|capfirst %}">
+			</form>
+		</div>
+	</div>
+</section>
+</div>
+
+{% endblock %}

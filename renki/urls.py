@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     url(r'^vhosts/(\d+)$', 'renki.views.vhosts_edit', name='vhosts_edit'),
     url(r'^databases/(\d+)$', 'renki.views.databases_passwd', name='databases_passwd'),
     url(r'^databases/?$', 'renki.views.databases', name='databases'),
+    url(r'^ports/?$', 'renki.views.ports', name='ports'),
     
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),

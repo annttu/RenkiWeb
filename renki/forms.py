@@ -34,3 +34,7 @@ class DomainForm(forms.Form):
 
 class NewDomainForm(DomainForm):
     name = forms.SlugField(required=True)
+    
+class PortForm(forms.Form):
+        server = forms.ChoiceField(choices=(('Dummy',0),))
+        info = forms.CharField(required=False)
