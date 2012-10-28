@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from django.utils.translation import ugettext_lazy as _
 from django.core.cache import get_cache
+from renki.utils import get_srv
 from django.contrib import messages
 
 from renki.forms import DomainForm, PortForm
@@ -19,21 +20,22 @@ from services.exceptions import DoesNotExist
 import logging
 logging = logging.getLogger('renki')
 
-    
-def get_srv(request):
-    cache = get_cache('inprocess')
-    if 'srv' in request.session:
-        key = request.session['srv']
-        data = cache.get(key)
-        return data
-    return None
-
 @login_required
 def index(request, **kwargs):
     messages = []
     if 'messages' in kwargs:
         messages = kwargs['messages']
-    return render_to_response('renki/index.html',{'messages': messages},
+    try:
+        srv = get_srv(request)
+        domains = srv.domains.list()
+    except Exception as e:
+        logging.exception(e)
+        domains = None
+    return render_to_response('renki/index.html',
+        {
+        'messages': messages,
+        'domains': domains
+        },
         context_instance=RequestContext(request))
         
 def my_login(request, next=None, **kwargs):
@@ -59,7 +61,7 @@ def my_login(request, next=None, **kwargs):
                     return redirect(next)
                 else:
                     kwargs = {'messages': [_('Successfully logged in!')]}
-                    return redirect('success')
+                    return redirect('index')
             else:
                 errormsg = _('Invalid login')
     return render_to_response('renki/login.html',{'errormsg' : errormsg, 'next': next},
@@ -99,7 +101,19 @@ def domains(request, **kwargs):
         context_instance=RequestContext(request))
 
 @login_required
-def domains_edit(request, domain_id, **kwargs):
+def domain_index(request, domain_id, **kwargs):
+    try:
+        srv = get_srv(request)
+        domain = srv.domains.get(domain_id=domain_id)
+        vhosts = srv.vhosts.list(domain=domain.name)
+    except Exception as e:
+        logging.exception(e)
+        vhosts = None
+    return render_to_response('renki/domain_index.html',{'vhosts': vhosts},
+        context_instance=RequestContext(request))
+
+@login_required
+def domain_edit(request, domain_id, **kwargs):
     messages = []
     try:
         srv = get_srv(request)
@@ -135,13 +149,19 @@ def domains_edit(request, domain_id, **kwargs):
             messages.append(_('Form contain errors'))
     else:
         masters = ''
-        for m in domain.masters:
-            masters += '%s,' % m
-        masters = masters.strip(',')
-        allow_transfer = ''
-        for m in domain.allow_transfer:
-            allow_transfer += '%s,' % m
-        allow_transfer = allow_transfer.strip(',')
+        try:
+            for m in domain.masters:
+                masters += '%s,' % m
+            masters = masters.strip(',')
+        except:
+            masters = None
+        try:
+            allow_transfer = ''
+            for m in domain.allow_transfer:
+                allow_transfer += '%s,' % m
+            allow_transfer = allow_transfer.strip(',')
+        except:
+            pass
         form = DomainForm(initial = {'shared':domain.shared, 'dns': domain.dns, 'refresh_time' : domain.refresh_time,
             'retry_time': domain.retry_time, 'expire_time': domain.expire_time,
             'minimum_cache_time': domain.minimum_cache_time, 'ttl':domain.ttl,

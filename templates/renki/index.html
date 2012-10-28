@@ -2,6 +2,58 @@
 {% load i18n %}
 {% load future %}
 {% block content %}
+<div class="row">
+			<h1>Welcome to Renki</h1>
+			<p class="marketing-byline">Renki is a service management system of Kapsi Internet-käyttäjät ry.</p>
+
+			<hr class="soften">
+			<div class="span4">
+				<h2>Domains</h2>
+				<table class="table table-condensed">
+					{% for domain in domains %}
+					<tr>
+						<td><a href="/domains/{{domain.t_domains_id}}"> {{domain.name}}</a></td>
+					</tr>
+					{% empty %}
+					<tr>
+						<td>{% trans "No domains available." %}</td>
+					</tr>
+					{% endfor %}
+					<tr>
+						<td><a href="/domains/add/"><i class="icon-plus-sign"></i> {% trans "Add new domain" %}</td>
+					</tr>
+				</table>
+			</div>
+			<div class="span4">
+				<h2>Databases</h2>
+				<table class="table table-hover">
+					<tr>
+						<td><a href="databases/mysql">MySQL</a></td>
+						<td><a href="databases/mysql/veijo">veijo</a></td>
+					</tr>
+					<tr>
+						<td rowspan="2"><a href="databases/psql">PostgreSQL</a></td>
+						<td><a href="databases/psql/veijo">veijo</a></td>
+					</tr>
+					<tr>
+						<td><a href="databases/psql/veijo-dev">veijo-dev</a></td>
+					</tr>
+				</table>
+			</div>
+			<div class="span4">
+				<h2>Your contact info</h2>
+				<address>
+					<p><strong><u>First</u> Name Family</strong><br>
+					Address number<br>
+					Postoffice City</p>
+					<p><i class="icon-home" title="Kotikunta"></i> Municipality</p>
+					<p><i class="icon-envelope"></i> nick@kapsi.fi</p>
+					<p>Phone: +358 8 666 213<br>
+					SMS: +358 555 419 492</p>
+				</address>
+				<p>Not correct? <a href="contact/edit">Change the info!</a></p>
+			</div>
+<!-- 
 <section>
 	<div class="page-header">
 		<h2>{% trans "homepage" %}
@@ -18,4 +70,5 @@
 			</ul>
 		</div>
 	</div>
+-->
 {% endblock %}

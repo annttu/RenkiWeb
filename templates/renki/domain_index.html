@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load future %}
+{% block content %}
+<section>
+<div class="row">
+	<div class="span12">
+		<a href="{% url "domains" %}" alt="{% trans "back to domains list" %}">{% trans "back to domains list" %}</a>
+		<h2>{% trans "Domain" %} {{domain.name}}</h2>
+		<p></p>
+		<div class="span6">
+			<h3>{% trans "vhosts" %}</h3>
+			{% for vhost in vhosts %}
+			<tr>
+				<td><a href="/vhosts/{{vhost.t_vhosts_id}}"> {{vhost.name}}</a></td>
+			</tr>
+			{% empty %}
+			<tr>
+				<td>{% trans "No vhosts available." %}</td>
+			</tr>
+			{% endfor %}
+		</div>
+</div>
+{% endblock %}

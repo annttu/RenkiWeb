@@ -9,7 +9,7 @@
 <h2>{% trans "Domain" %} {{domain.name}}</h2>
 <p></p>
 <div class="span6">
-	<form class="form-horizontal" action="{% url "domains_edit" domain.t_domains_id %}" method="POST">
+	<form class="form-horizontal" action="{% url "domain_edit" domain.t_domains_id %}" method="POST">
 		<fieldset>
 			{% csrf_token %}
 			<div class="control-group">

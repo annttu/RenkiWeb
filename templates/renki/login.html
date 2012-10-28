@@ -1,6 +1,25 @@
-{% extends "base.html" %}
+<!DOCTYPE HTML>
 {% load i18n %}
-{% block content %}
+<html>
+<head>
+       <title>Renki - {% trans "Service management" %}</title>
+       <link href="http://current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css" rel="stylesheet">
+       <link href="{{ STATIC_URL }}style/renki.css" rel="stylesheet">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+</head>
+<body>
+{% if messages %}
+<section>
+       <div class="alert alert-success span6 center">
+               <button class="close" data-dismiss="alert" id="mainsuccess">×</button>
+       {% for message in messages %}
+               <p>{{message}}</p>
+       {% endfor %}
+       </div>
+</section>
+{% endif %}
+ <div class="container">
 <section>
 	<div class"row">
 		<div class="span12">
@@ -24,7 +43,9 @@
 			</div>
 	</div>
 </section>
+</div>
+</body>
+</html>
 <script type="text/javascript">
 	document.getElementById('id_username').focus()
 </script>
-{% endblock %}

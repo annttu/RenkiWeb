@@ -1,5 +1,7 @@
 # Django settings for renki project.
 
+import django.conf.global_settings as DEFAULT_SETTINGS
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
@@ -95,6 +97,9 @@ TEMPLATE_LOADERS = (
     'django.template.loaders.app_directories.Loader',
 #     'django.template.loaders.eggs.Loader',
 )
+
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + \
+('renki.ContextProcessors.user_information',)
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
