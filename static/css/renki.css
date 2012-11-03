@@ -12,7 +12,7 @@
 
 body {
   position: relative;
-  padding-top: 40px;
+  margin-top: 40px;
 }
 
 /* Code in headings */
@@ -1020,3 +1020,26 @@ form.bs-docs-example {
     float: none;
   }
 }
+
+.disabled {
+    color: #ccc;
+}
+
+.login {
+    margin: auto;
+    height: 200px;
+    max-width: 360px;
+    width: 280px;
+}
+
+footer {
+  position: relative;
+  clear:both;
+  padding-top:80px;
+} 
+
+html, body {
+  height: 100%;
+}
+
+

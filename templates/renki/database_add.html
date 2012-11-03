@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load future %}
+{% block content %}
+<section>
+<div class="page-header">
+		<h2>{% trans "Database" %}</h2>
+</div>
+</section>
+<section>
+	<div class="row">
+		<div class="span4 offset3">
+			<h3>{% trans "Add Database" %}</h3>
+			<form action="/databases/add/{{dbtype}}" method="post" class="form-horizontal">
+			{% csrf_token %}
+			{% for field in form %}
+        		<div class="control-group">
+            	
+				<label for="field.html_name" class="control-label">{{ field.label }}</label>
+				<div class="controls">
+				{{ field }}
+				<span class="help-inline">
+					{{ field.errors }}
+				</span>
+				</div>
+        		</div>
+    		{% endfor %}
+			   	<p><input type="submit" class="btn btn-primary" value="{% trans "Create" %}" /></p>
+			</form>
+		</div>
+	</div>
+</section>
+</div>
+
+{% endblock %}

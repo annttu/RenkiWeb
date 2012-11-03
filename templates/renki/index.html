@@ -25,19 +25,36 @@
 				</table>
 			</div>
 			<div class="span4">
-				<h2>Databases</h2>
-				<table class="table table-hover">
+				<h2><a href="/databases/">Databases</a></h2>
+				<table class="table">
 					<tr>
-						<td><a href="databases/mysql">MySQL</a></td>
-						<td><a href="databases/mysql/veijo">veijo</a></td>
-					</tr>
-					<tr>
-						<td rowspan="2"><a href="databases/psql">PostgreSQL</a></td>
-						<td><a href="databases/psql/veijo">veijo</a></td>
-					</tr>
-					<tr>
-						<td><a href="databases/psql/veijo-dev">veijo-dev</a></td>
-					</tr>
+						<td rowspan="{{mysql|length}}">MySQL</td>
+						{% for database in mysql %}
+						{% if forloop.counter > 1 %}
+						<tr>
+						{% endif %}
+							<td><a href="databases/{{ database.t_databases_id }}">{{ database.database_name}}</a></td>
+						</tr>
+						{% empty %}
+							<td>{% trans "No databases found" %}</td>
+						{% endfor %}
+						<tr>
+							<td colspan="2"><a href="/databases/add/mysql"><i class="icon-plus-sign"></i> {% trans "Add new MySQL database" %}</a></td>
+						</tr>
+						<tr>
+						<td rowspan="{{postgresql|length}}">PostgreSQL</td>
+						{% for database in postgresql %}
+						{% if forloop.counter > 1 %}
+						<tr>
+						{% endif %}
+							<td><a href="databases/{{ database.t_databases_id }}">{{ database.database_name}}</a></td>
+						</tr>
+						{% empty %}
+							<td>{% trans "No databases found" %}</td>
+						{% endfor %}
+						<tr>
+							<td colspan="2"><a href="/databases/add/postgresql"><i class="icon-plus-sign"></i> {% trans "Add new PostgreSQL database" %}</a></td>
+						</tr>
 				</table>
 			</div>
 			<div class="span4">

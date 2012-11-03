@@ -31,10 +31,19 @@ class DomainForm(forms.Form):
     masters.widget.attrs={'placeholder':_('IP-address')}
     allow_transfer = forms.CharField(required=False, validators=[IPlistValidator])
     allow_transfer.widget.attrs={'placeholder':_('IP-address')}
+    approved = forms.BooleanField(required=False, initial=False)
 
 class NewDomainForm(DomainForm):
     name = forms.SlugField(required=True)
     
 class PortForm(forms.Form):
-        server = forms.ChoiceField(choices=(('Dummy',0),))
-        info = forms.CharField(required=False)
+    server = forms.ChoiceField(choices=(('Dummy',0),))
+    info = forms.CharField(required=False)
+
+class DatabaseForm(forms.Form):
+    database_name = forms.CharField(required=True)
+    #database_type = forms.ChoiceField(choices=(('MYSQL','MySQL'),('POSTGRESQL','PostgreSQL')))
+    server = forms.ChoiceField()
+    info = forms.CharField(required=False)
+    approved = forms.BooleanField(required=False, initial=False)
+

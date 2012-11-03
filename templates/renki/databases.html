@@ -23,6 +23,13 @@
 	{% endfor %}
 	</div>
 </section>
+<section>
+	<div class="row">
+		<div class="span4">
+			<p><a href="/databases/add/mysql"><i class="icon-plus-sign"></i> {% trans "Add new database" %}</a></p>
+		</div>
+	</div>
+</section>
 {% endif %}
 {% if mysql %}
 <section>
@@ -35,10 +42,20 @@
 		<h3>{{db.database_name}}</a></h3>
 		<p>{% trans "username"|capfirst %}: {{db.username}}</p>
 		<p>{% trans "server"|capfirst %}: {{db.server}}</p>
-		<p><a href="{% url "databases_passwd" db.t_databases_id %}">{% trans "change password" %}</p>
+		<p><a href="{% url "databases_passwd" db.t_databases_id %}">{% trans "change password" %}</a></p>
     </div>
 	{% endfor %}
    </div>
+</section>
+<section>
+	<div class="row">
+		<div class="span4">
+			<p><a href="/databases/add/postgresql"><i class="icon-plus-sign"></i> {% trans "Add new database" %}</a></p>
+		</div>
+	</div>
+</section>
+<section>
+	
 </section>
 {% endif %}
 {% endblock %}

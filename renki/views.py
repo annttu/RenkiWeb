@@ -12,29 +12,32 @@ from django.core.cache import get_cache
 from renki.utils import get_srv
 from django.contrib import messages
 
-from renki.forms import DomainForm, PortForm
+from renki.forms import DomainForm, PortForm, DatabaseForm
 
 from services.services import Services
-from services.exceptions import DoesNotExist
+from services.exceptions import DoesNotExist, AliasNotFound, AlreadyExist
 
 import logging
 logging = logging.getLogger('renki')
 
 @login_required
 def index(request, **kwargs):
-    messages = []
-    if 'messages' in kwargs:
-        messages = kwargs['messages']
+    #messages = []
+    #if 'messages' in kwargs:
+    #    messages = kwargs['messages']
     try:
         srv = get_srv(request)
         domains = srv.domains.list()
+        mysql = srv.mysql.list()
+        postgresql = srv.postgresql.list()
     except Exception as e:
         logging.exception(e)
         domains = None
     return render_to_response('renki/index.html',
         {
-        'messages': messages,
-        'domains': domains
+        'domains': domains,
+        'postgresql': postgresql,
+        'mysql': mysql
         },
         context_instance=RequestContext(request))
         
@@ -88,7 +91,9 @@ def my_logout(request, **kwargs):
         pass
     logout(request)
     return redirect('/login')
-    
+
+### Domains ###
+
 @login_required
 def domains(request, **kwargs):
     try:
@@ -109,7 +114,7 @@ def domain_index(request, domain_id, **kwargs):
     except Exception as e:
         logging.exception(e)
         vhosts = None
-    return render_to_response('renki/domain_index.html',{'vhosts': vhosts},
+    return render_to_response('renki/domain_index.html',{'domain': domain, 'vhosts': vhosts},
         context_instance=RequestContext(request))
 
 @login_required
@@ -173,7 +178,7 @@ def domain_edit(request, domain_id, **kwargs):
     return render_to_response('renki/domains_edit.html',{'domain':domain, 'form':form, 'messages': messages},
         context_instance=RequestContext(request))
 
-
+### Vhosts ###
 
 @login_required
 def vhosts_edit(request, vhost_id, **kwargs):
@@ -188,6 +193,8 @@ def vhosts_edit(request, vhost_id, **kwargs):
         pass
     return render_to_response('renki/vhosts_edit.html',{'vhost':vhost},
         context_instance=RequestContext(request))
+
+### Ports ###
 
 def ports(request, **kwargs):
     class Port:
@@ -210,7 +217,7 @@ def ports(request, **kwargs):
         if form.is_valid():
             try:
                 srv.user_ports.add(form.cleaned_data['server'],form.cleaned_data['info'])
-                messages.info(request,_('Successfully added port'))
+                messages.success(request,_('Successfully added port'))
                 form = PortForm()
                 form.fields['server'].choices = all_servers
             except Exception as e:
@@ -232,6 +239,8 @@ def ports(request, **kwargs):
                               context_instance=RequestContext(request))
 
 
+### Databases ###
+
 @login_required
 def databases(request, **kwargs):
     srv = get_srv(request)
@@ -240,6 +249,7 @@ def databases(request, **kwargs):
     return render_to_response('renki/databases.html', {'mysql':mysql,'postgresql':psql},
         context_instance=RequestContext(request))
 
+@login_required
 def databases_passwd(request, database_id, **kwargs):
     srv = get_srv(request)
     try:
@@ -250,8 +260,50 @@ def databases_passwd(request, database_id, **kwargs):
         except DoesNotExist:
             raise Http404
     if request.method == 'POST':
-        return render_to_response('renki/database_passwd.html', {'messages': [_('Password changed!'), 'fake'], 'db': db},
+        messages.success(request, _('Password changed!'))
+        messages.success(request, 'fake')
+        return render_to_response('renki/database_passwd.html', {'db': db},
                                   context_instance=RequestContext(request))
     else:
         return render_to_response('renki/database_passwd.html', {'db':db},
                                   context_instance=RequestContext(request))
+
+@login_required
+def database_add(request, dbtype, **kwargs):
+    if dbtype not in ['mysql', 'postgresql']:
+        raise Http404
+    srv = get_srv(request)
+    if dbtype.lower() == 'mysql':
+            all_servers = srv.mysql.list_sql_servers()
+    else:
+        all_servers = srv.postgresql.list_sql_servers()
+        all_servers = [(server.server, server.server) for server in all_servers]
+    if request.method == 'POST':
+        form = DatabaseForm(request.POST)
+        form.fields['server'].choices = all_servers
+        if form.is_valid():
+            try:
+                if dbtype.lower() == 'mysql':
+                    srv.mysql.add(form.cleaned_data['server'],
+                            database=form.cleaned_data['database_name'],
+                            info=form.cleaned_data['info'])
+                else:
+                    srv.postgresql.add(form.cleaned_data['server'],
+                            database=form.cleaned_data['database_name'],
+                            info=form.cleaned_data['info'])
+                messages.success(request, _('Successfully added database %s' % form.cleaned_data['database_name']))
+            except AliasNotFound as e:
+                messages.error(request, _(str(e)))
+            except AlreadyExist as e:
+                messages.error(request, _(str(e)))
+            except Exception as e:
+                logging.exception(e)
+                messages.error(request, _('Cannot add database'))
+        else:
+            messages.error(request, _('Form contain errors'))
+    else:
+        
+        form = DatabaseForm()
+        form.fields['server'].choices = all_servers
+    return render_to_response('renki/database_add.html', {'form': form, 'dbtype': dbtype.lower()},
+                              context_instance=RequestContext(request))

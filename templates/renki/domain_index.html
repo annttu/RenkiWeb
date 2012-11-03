@@ -12,7 +12,7 @@
 			<h3>{% trans "vhosts" %}</h3>
 			{% for vhost in vhosts %}
 			<tr>
-				<td><a href="/vhosts/{{vhost.t_vhosts_id}}"> {{vhost.name}}</a></td>
+				<td><a href="/vhosts/{{vhost.t_vhosts_id}}"> {{vhost.name}}</a><span class="disabled"> ({% for redirect in vhost.redirects%} {{redirect}}{% if not forloop.last %},{% endif %}{% endfor %} )</span></td>
 			</tr>
 			{% empty %}
 			<tr>

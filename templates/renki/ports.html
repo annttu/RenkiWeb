@@ -7,19 +7,6 @@
 		<h2>{% trans "Ports" %}</h2>
 </div>
 </section>
-{% if messages %}
-<section>
-   <div class="row well">
-	<div class="span12">
-		<ul class="messages">
-		    {% for message in messages %}
-		    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-		    {% endfor %}
-		</ul>
-	</div>
-</div>
-</section>
-{% endif %}
 {% for server in servers %}
 <section>
    <div class="row well">
