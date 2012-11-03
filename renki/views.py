@@ -274,10 +274,10 @@ def database_add(request, dbtype, **kwargs):
         raise Http404
     srv = get_srv(request)
     if dbtype.lower() == 'mysql':
-            all_servers = srv.mysql.list_sql_servers()
+        all_servers = srv.mysql.list_sql_servers()
     else:
         all_servers = srv.postgresql.list_sql_servers()
-        all_servers = [(server.server, server.server) for server in all_servers]
+    all_servers = [(server.server, server.server) for server in all_servers]
     if request.method == 'POST':
         form = DatabaseForm(request.POST)
         form.fields['server'].choices = all_servers

@@ -45,7 +45,8 @@ class ServicesMiddleware(object):
             self.set_srv(request, request.srv)
             print('Success to save session')
         except Exception as e:
-            print('Failed to save session %s' % e)
+            pass
+            #print('Failed to save session %s' % e)
         return response
 
     #def process_exception(self, request, exception):
